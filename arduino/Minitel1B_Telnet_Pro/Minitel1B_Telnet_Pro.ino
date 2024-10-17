@@ -109,7 +109,7 @@ void setup() {
   debugBegin(115200);
   debugPrintln("----------------");
   debugPrintln("Debug ready");
-  debugPrintf("RESET_REASON = %d\n", ESP_RST_SW, reset_reason);
+  debugPrintf("RESET_REASON = %d\n", reset_reason);
 
   // Minitel setup
   // (don't) teletelMode();
@@ -157,8 +157,7 @@ void setup() {
       separateUrl(url);
 
       minitel.capitalMode();
-      minitel.println("Connecting, please wait. CTRL+R to reset");
-  
+      minitel.println("Connecting, please wait. CTRL+R to reset");  
       
       debugPrintf("\nWiFi Connecting to %s ", ssid.c_str());
       WiFi.disconnect();
@@ -176,12 +175,10 @@ void setup() {
         }
       }
       debugPrintln();
-      debugPrint("WiFi connected with local IP: ");
-      debugPrintln(WiFi.localIP());
+      debugPrintf("WiFi connected with local IP %s\n", WiFi.localIP());
       minitel.print("Connected with IP ");
       minitel.println(WiFi.localIP().toString());
     }
-
 
     if (connectionType == 0) { // TELNET --------------------------------------------------------------------------------------
       // Telnet server connection
@@ -1032,7 +1029,7 @@ void loopWebsocket() {
   // Minitel -> Websocket
   uint32_t key = minitel.getKeyCode(false);
   if (key != 0) {
-    if (key == 18) { // CTRL + R = RESET
+    if (key == 18 || key == 4937) { // CTRL+R = RESET ou TS+CONNEXION
       webSocket.disconnect();
       WiFi.disconnect();
       if (!col80 && prestel) teletelMode();
